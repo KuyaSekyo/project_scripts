@@ -1,9 +1,18 @@
-----
+
 Dependencies
-"pip install weasyprint"
 ----
+```
+pip install weasyprint
+```
+
 Add permission
-"chmod +x recon.sh"
 ----
+```
+chmod +x recon.sh
+```
+
 Sample script
-"sudo ./recon.sh scanme.nmap.org"
+----
+```
+sudo ./recon.sh scanme.nmap.org
+```
