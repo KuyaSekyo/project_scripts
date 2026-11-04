@@ -165,3 +165,12 @@ def generate_report(target, nmap_file, whatweb_file, nikto_file, nuclei_file, ou
     owasp_labels_map = {
         "a01": "A01:2021 - Broken Access Control",
         "a02": "A02:2021 - Cryptographic Failures",
+        "a03": "A03:2021 - Injection",
+        "a04": "A04:2021 - Insecure Design",
+        "a05": "A05:2021 - Security Misconfiguration",
+        "a06": "A06:2021 - Vulnerable and Outdated Components",
+        "a07": "A07:2021 - Identification and Authentication Failures",
+        "a08": "A08:2021 - Software and Data Integrity Failures",
+        "a09": "A09:2021 - Security Logging and Monitoring Failures",
+        "a10": "A10:2021 - Server-Side Request Forgery (SSRF)"
+    }
