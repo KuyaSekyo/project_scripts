@@ -207,7 +207,8 @@ if [ "$SKIP_SCANS" = false ]; then
             echo "[+] Running web subdirectory structural analysis via Nikto..."
             > "$OUTPUT_DIR/nikto_findings.json"
             while read -r web_target; do
-                nikto -h "$web_target" -C all -Format json -useragent "$UA_STRING" -o "$OUTPUT_DIR/tmp_nikto.json" -maxtime 5m &>/dev/null
+                #nikto -h "$web_target" -C all -Format json -useragent "$UA_STRING" -o "$OUTPUT_DIR/tmp_nikto.json" -maxtime 5m &>/dev/null
+                nikto -h "$web_target" -C all -Tuning 1,4 -timeout 3 -maxtime 5m -nointeractive -nodislookup -Format json -useragent "$UA_STRING" -o "$OUTPUT_DIR/tmp_nikto.json" &>/dev/null
                 if [ -s "$OUTPUT_DIR/tmp_nikto.json" ]; then
                     cat "$OUTPUT_DIR/tmp_nikto.json" >> "$OUTPUT_DIR/nikto_findings.json"
                     rm "$OUTPUT_DIR/tmp_nikto.json"
