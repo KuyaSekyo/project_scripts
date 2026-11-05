@@ -63,7 +63,7 @@ def generate_report(target, nmap, whatweb, sslscan, gobuster, nikto, nuclei, out
     if not whatweb_html: 
         whatweb_html = "<p class='skipped-text'>Module omitted or no web framework signatures captured.</p>"
 
-    # 3. Parse SSLScan Cryptographic Layouts (XML Processing)
+        # 3. Parse SSLScan Cryptographic Layouts (XML Processing)
     ssl_html = ""
     ssl_count = 0
     if os.path.exists(sslscan) and os.path.getsize(sslscan) > 0:
@@ -90,8 +90,6 @@ def generate_report(target, nmap, whatweb, sslscan, gobuster, nikto, nuclei, out
                     </div>"""
         except: 
             ssl_html = "<p class='skipped-text'>Error reading SSLScan results format or empty stream.</p>"
-    if not ssl_html: 
-        ssl_html = "<p style='color:green;'>✔ No insecure ciphers or old protocols accepted.</p>"
 
     # 4. Parse Gobuster Path Fuzzing Logs
     gobuster_html = ""
