@@ -218,21 +218,20 @@ if [ "$SKIP_SCANS" = false ]; then
         fi
     fi
 
-    # --- PHASE 5: ACTIVE EXPLOIT SIGNATURE VALIDATION (NUCLEI) ---
+       # --- PHASE 5: ACTIVE EXPLOIT SIGNATURE VALIDATION (NUCLEI) ---
     echo "[+] Phase 5: Triggering vulnerability exploit signature engine via Nuclei..."
-    #nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -H "User-Agent: $UA_STRING" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
-    nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -concurrency 10 -mrat 200 -H "User-Agent: $UA_STRING" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
+    # -mpt replaces the broken -mrat flag cleanly for rate-limiting
+    nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -concurrency 10 -mpt 200 -H "User-Agent: $UA_STRING" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
 
-    fi # --- END OF SKIP_SCANS RECON BLOCK ---
+fi # --- END OF SKIP_SCANS RECON BLOCK ---
 
-    #--- PHASE 6: REPORT COMPILATION PIPELINE ---
-    
-    echo "[+] Phase 6: Compiling all modular outputs into Consolidated_Security_Report.pdf..."
-    python3 report_gen.py "$TARGET" 
-    "$OUTPUT_DIR/nmap_summary.txt" 
-    "$OUTPUT_DIR/whatweb_findings.json" 
-    "$OUTPUT_DIR/sslscan_findings.xml" 
-    "$OUTPUT_DIR/gobuster_findings.json" 
-    "$OUTPUT_DIR/nikto_findings.json" 
-    "$OUTPUT_DIR/nuclei_findings.json" 
-    "$OUTPUT_DIR/Consolidated_Security_Report.pdf"
+# --- PHASE 6: REPORT COMPILATION PIPELINE ---
+echo "[+] Phase 6: Compiling all modular outputs into Consolidated_Security_Report.pdf..."
+python3 report_gen.py "$TARGET" \
+                      "$OUTPUT_DIR/nmap_summary.txt" \
+                      "$OUTPUT_DIR/whatweb_findings.json" \
+                      "$OUTPUT_DIR/sslscan_findings.xml" \
+                      "$OUTPUT_DIR/gobuster_findings.json" \
+                      "$OUTPUT_DIR/nikto_findings.json" \
+                      "$OUTPUT_DIR/nuclei_findings.json" \
+                      "$OUTPUT_DIR/Consolidated_Security_Report.pdf"
