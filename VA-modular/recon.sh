@@ -221,7 +221,7 @@ if [ "$SKIP_SCANS" = false ]; then
        # --- PHASE 5: ACTIVE EXPLOIT SIGNATURE VALIDATION (NUCLEI) ---
     echo "[+] Phase 5: Triggering vulnerability exploit signature engine via Nuclei..."
     # -mpt replaces the broken -mrat flag cleanly for rate-limiting
-    nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -concurrency 10 -mpt 200 -H "User-Agent: $UA_STRING" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
+    nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -concurrency 10 -mrat 200 -H "User-Agent: $UA_STRING" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
 
 fi # --- END OF SKIP_SCANS RECON BLOCK ---
 
