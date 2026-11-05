@@ -80,7 +80,8 @@ done < "$TARGETS_FILE"
 # 3b. Web Application Technology & Directory Fuzzing
 if [ -s "$WEB_TARGETS_FILE" ]; then
     echo "[+] Profiling core web component architecture via WhatWeb..."
-    whatweb --log-json="$OUTPUT_DIR/whatweb_findings.json" --input-file="$WEB_TARGETS_FILE" -q
+    #whatweb --log-json="$OUTPUT_DIR/whatweb_findings.json" --input-file="$WEB_TARGETS_FILE" -q #Original
+    whatweb --user-agent="ZP-VA" --log-json="$OUTPUT_DIR/whatweb_findings.json" --input-file="$WEB_TARGETS_FILE" -q
 
     echo "[+] Phase 3b: Launching web directory wordlist fuzzing via Gobuster..."
     # Using Kali's standard medium directory wordlist
@@ -93,7 +94,8 @@ if [ -s "$WEB_TARGETS_FILE" ]; then
     while read -r web_target; do
         echo "    [*] Directory forcing: $web_target"
         # -k skips TLS validation to prevent crashes on self-signed targets
-        gobuster dir -u "$web_target" -w "$WORDLIST" -k -q --no-progress -o "$OUTPUT_DIR/tmp_gobuster.txt"
+        #gobuster dir -u "$web_target" -w "$WORDLIST" -k -q --no-progress -o "$OUTPUT_DIR/tmp_gobuster.txt" #Original
+        gobuster dir -u "$web_target" -w "$WORDLIST" -k -q --no-progress -a "ZP-VA" -o "$OUTPUT_DIR/tmp_gobuster.txt"
         if [ -s "$OUTPUT_DIR/tmp_gobuster.txt" ]; then
             while read -r gob_line; do
                 # Convert Gobuster flat output into a structured raw tracking entry
@@ -107,7 +109,8 @@ if [ -s "$WEB_TARGETS_FILE" ]; then
     # -C all forces check sweeps across web subdirectories
     > "$OUTPUT_DIR/nikto_findings.json"
     while read -r web_target; do
-        nikto -h "$web_target" -C all -Format json -o "$OUTPUT_DIR/tmp_nikto.json" -maxtime 5m &>/dev/null
+        #nikto -h "$web_target" -C all -Format json -o "$OUTPUT_DIR/tmp_nikto.json" -maxtime 5m &>/dev/null #Original
+        nikto -h "$web_target" -C all -Format json -useragent "ZP-VA (Vulnerability Assessment Framework)" -o "$OUTPUT_DIR/tmp_nikto.json" -maxtime 5m &>/dev/null
         if [ -s "$OUTPUT_DIR/tmp_nikto.json" ]; then
             cat "$OUTPUT_DIR/tmp_nikto.json" >> "$OUTPUT_DIR/nikto_findings.json"
             rm "$OUTPUT_DIR/tmp_nikto.json"
@@ -117,13 +120,9 @@ fi
 
 # --- PHASE 4: ACTIVE CVE & OWASP EXPLOIT SCANNING ---
 echo "[+] Phase 4: Triggering vulnerability exploit signature database via Nuclei..."
-nuclei -list "$TARGETS_FILE" \
-       -as \
-       -tags owasp,cve,misconfig \
-       -severity info,low,medium,high,critical \
-       -jsonl \
-       -o "$OUTPUT_DIR/nuclei_findings.json" \
-       -silent
+#nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent #Original
+nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -H "User-Agent: ZP-VA" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
+
 
 # --- PHASE 5: CONSOLIDATED PDF REPORT GENERATION ---
 echo "[+] Phase 5: Compiling all tool outputs into Consolidated_Security_Report.pdf..."
