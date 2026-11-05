@@ -39,7 +39,9 @@ fi
 
 # --- PHASE 2: INFRASTRUCTURE & PORT PROFILING ---
 echo "[+] Phase 2: Running network port mapping loops via Nmap..."
-nmap -iL "$AMASS_TARGETS" -p- -sV -T4 --open -oN "$OUTPUT_DIR/nmap_summary.txt" -oG "$OUTPUT_DIR/nmap_grepable.txt"
+#nmap -iL "$AMASS_TARGETS" -p- -sV -T4 --open -oN "$OUTPUT_DIR/nmap_summary.txt" -oG "$OUTPUT_DIR/nmap_grepable.txt" #Orignal
+nmap -iL "$AMASS_TARGETS" -p- -sV -T4 --open --data-string "ZP-VA" --script-args http.useragent="ZP-VA" -oN "$OUTPUT_DIR/nmap_summary.txt" -oG "$OUTPUT_DIR/nmap_grepable.txt"
+
 
 # Isolate open endpoints
 TARGETS_FILE="$OUTPUT_DIR/endpoints_discovered.txt"
