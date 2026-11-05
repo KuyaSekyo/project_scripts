@@ -165,7 +165,7 @@ if [ "$SKIP_SCANS" = false ]; then
         if [ "$RUN_WHATWEB" = true ]; then
             verify_tool "whatweb"
             echo "[+] Profiling core web component architecture via WhatWeb..."
-            whatweb --user-agent="$UA_STRING" -v -a 1 --log-json="$OUTPUT_DIR/whatweb_findings.json" --input-file="$WEB_TARGETS_FILE" -q
+            whatweb --user-agent="$UA_STRING" -a 1 --log-json="$OUTPUT_DIR/whatweb_findings.json" --input-file="$WEB_TARGETS_FILE" -q
         fi
 
         if [ "$RUN_SSLSCAN" = true ]; then
