@@ -70,14 +70,12 @@ def generate_report(target, nmap, whatweb, sslscan, gobuster, nikto, nuclei, out
         try:
             with open(sslscan, 'r') as f: 
                 raw_xml = f.read()
-            # Wrap in dummy tags if multiple runs appends layout lines natively
             root = ET.fromstring(f"<root>{raw_xml}</root>")
             for cipher in root.findall('.//cipher'):
                 status = cipher.get('status')
                 cipher_name = cipher.get('cipher') or ""
                 ssl_ver = cipher.get('sslversion') or ""
                 
-                # Identify weak protocols/ciphers
                 is_weak_proto = any(p in ssl_ver for p in ["SSLv2", "SSLv3", "TLSv1.0", "TLSv1.1"])
                 is_weak_cipher = any(c in cipher_name for c in ["RC4", "DES", "3DES", "SEED", "NULL"])
                 
@@ -156,7 +154,7 @@ def generate_report(target, nmap, whatweb, sslscan, gobuster, nikto, nuclei, out
                     nuclei_html += f"""
                     <div class="vuln-card severity-{sev}">
                         <strong>{info.get('name', 'Unknown Vulnerability')}</strong> <span class="badge badge-{sev}">{sev.upper()}</span>
-Matched Endpoint: {data.get('matched-at', 'N/A')}
+                        <p><strong>Matched Endpoint:</strong> {data.get('matched-at', 'N/A')}</p>
 Vulnerability Summary: {info.get('description', 'N/A')}
 Remediation Framework: {rem}
 """
@@ -181,7 +179,6 @@ labels = {
 for k, v in labels.items():
 c = owasp_counts[k]
 matrix_rows += f"<tr class='{'matrix-clean' if c==0 else 'matrix-alert'}'>{v}{'CLEAN' if c==0 else f'{c} ALERTS'}"
-# HTML Layout Definition for WeasyPrint Print Engine
 html_content = f"""
 
 @page {{ size: letter; margin: 20mm; @bottom-right {{ content: counter(page); font-size: 10px; color: #777; }} }}
@@ -198,7 +195,7 @@ h2 {{ color: #457b9d; font-size: 16px; margin-top: 25px; border-bottom: 1px soli
 .severity-critical {{ border-left-color: #e63946; background-color: #fff5f5; }}
 .severity-high {{ border-left-color: #f4a261; background-color: #fff9f5; }}
 .severity-medium {{ border-left-color: #e9c46a; background-color: #fffdf5; }}
-.severity-low {{ border-left-color: #a8dadc; background-color: #f4ffb; }}
+.severity-low {{ border-left-color: #a8dadc; background-color: #f4fbfb; }}
 .severity-info {{ border-left-color: #4ea8de; background-color: #f4faff; }}
 .badge {{ display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; color: #fff; text-transform: uppercase; float: right; }}
 .badge-critical {{ background-color: #e63946; }}
