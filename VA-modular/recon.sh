@@ -139,7 +139,8 @@ if [ "$SKIP_SCANS" = false ]; then
 
     # Extract open endpoints using the fixed awk script
     > "$TARGETS_FILE"
-    awk '/Ports:/{split($0,a,"Ports: "); split(a,b,","); for(i in b){if(b[i] ~ /open/){split(b[i],c,"/"); print $2 ":" c}}}' "$OUTPUT_DIR/nmap_grepable.txt" >> "$TARGETS_FILE"
+    #awk '/Ports:/{split($0,a,"Ports: "); split(a,b,","); for(i in b){if(b[i] ~ /open/){split(b[i],c,"/"); print $2 ":" c}}}' "$OUTPUT_DIR/nmap_grepable.txt" >> "$TARGETS_FILE"
+    awk '/Ports:/{split($0,a,"Ports: "); split(a[2],b,","); for(i in b){if(b[i] ~ /open/){split(b[i],c,"/"); print $2 ":" c[1]}}}' "$OUTPUT_DIR/nmap_grepable.txt" >> "$TARGETS_FILE"
 
     if [ ! -s "$TARGETS_FILE" ]; then
         echo "[-] No open network interface pathways detected. Shutting down execution tree."
