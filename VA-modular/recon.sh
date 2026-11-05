@@ -131,7 +131,7 @@ if [ "$SKIP_SCANS" = false ]; then
 
     # --- PHASE 2: CORE PORT PROFILING AND DISCOVERY (NMAP) ---
     echo "[+] Phase 2: Running network port mapping loops via Nmap (Signed as ZP-VA)..."
-    nmap -iL "$AMASS_TARGETS" -p- -sV -T4 --open \
+    nmap -iL "$AMASS_TARGETS" -p- -sS -Pn -sV -T4 --open \
          --data-string "ZP-VA" \
          --script-args http.useragent="$UA_STRING" \
          -oN "$OUTPUT_DIR/nmap_summary.txt" \
