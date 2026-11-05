@@ -151,7 +151,8 @@ if [ "$SKIP_SCANS" = false ]; then
     if [ "$RUN_HTTPX" = true ]; then
         verify_tool "httpx"
         echo "[+] Phase 3: Validating web service liveness and schema mappings via HTTPx..."
-        httpx -l "$TARGETS_FILE" -scheme -silent -H "User-Agent: $UA_STRING" -o "$WEB_TARGETS_FILE"
+        #httpx -l "$TARGETS_FILE" -scheme -silent -H "User-Agent: $UA_STRING" -o "$WEB_TARGETS_FILE"
+        httpx -l "$TARGETS_FILE" -scheme -silent -t 20 -H "User-Agent: $UA_STRING" -o "$WEB_TARGETS_FILE"
     else
         while read -r line; do
             if [[ "$line" =~ :80$ ]] || [[ "$line" =~ :8080$ ]]; then echo "http://$line" >> "$WEB_TARGETS_FILE";
@@ -164,7 +165,7 @@ if [ "$SKIP_SCANS" = false ]; then
         if [ "$RUN_WHATWEB" = true ]; then
             verify_tool "whatweb"
             echo "[+] Profiling core web component architecture via WhatWeb..."
-            whatweb --user-agent="$UA_STRING" --log-json="$OUTPUT_DIR/whatweb_findings.json" --input-file="$WEB_TARGETS_FILE" -q
+            whatweb --user-agent="$UA_STRING" -v -a 1 --log-json="$OUTPUT_DIR/whatweb_findings.json" --input-file="$WEB_TARGETS_FILE" -q
         fi
 
         if [ "$RUN_SSLSCAN" = true ]; then
@@ -192,7 +193,8 @@ if [ "$SKIP_SCANS" = false ]; then
             > "$OUTPUT_DIR/gobuster_findings.json"
             while read -r web_target; do
                 echo "    [*] Directory forcing: $web_target"
-                gobuster dir -u "$web_target" -w "$WORDLIST" -k -q --no-progress -a "$UA_STRING" -o "$OUTPUT_DIR/tmp_gobuster.txt"
+                #gobuster dir -u "$web_target" -w "$WORDLIST" -k -q --no-progress -a "$UA_STRING" -o "$OUTPUT_DIR/tmp_gobuster.txt"
+                gobuster dir -u "$web_target" -w "$WORDLIST" -t 15 -b 301,302,403 -k -q --no-progress -a "$UA_STRING" -o "$OUTPUT_DIR/tmp_gobuster.txt"
                 if [ -s "$OUTPUT_DIR/tmp_gobuster.txt" ]; then
                     while read -r gob_line; do echo "$web_target $gob_line" >> "$OUTPUT_DIR/gobuster_findings.json"; done < "$OUTPUT_DIR/tmp_gobuster.txt"
                     rm "$OUTPUT_DIR/tmp_gobuster.txt"
@@ -216,7 +218,8 @@ if [ "$SKIP_SCANS" = false ]; then
 
     # --- PHASE 5: ACTIVE EXPLOIT SIGNATURE VALIDATION (NUCLEI) ---
     echo "[+] Phase 5: Triggering vulnerability exploit signature engine via Nuclei..."
-    nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -H "User-Agent: $UA_STRING" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
+    #nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -H "User-Agent: $UA_STRING" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
+    nuclei -list "$TARGETS_FILE" -as -tags owasp,cve,misconfig -severity info,low,medium,high,critical -concurrency 10 -mrat 200 -H "User-Agent: $UA_STRING" -jsonl -o "$OUTPUT_DIR/nuclei_findings.json" -silent
 
     fi # --- END OF SKIP_SCANS RECON BLOCK ---
 
