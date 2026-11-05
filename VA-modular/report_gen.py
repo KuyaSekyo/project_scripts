@@ -136,15 +136,18 @@ def generate_report(target, nmap, whatweb, sslscan, gobuster, nikto, nuclei, out
     # 6. Parse Nuclei JSON Lines Engine
     nuclei_html = ""
     nu_count = 0
-    if os.path.exists(nuclei) and os.path.getsize(nuclei) > 0:
+        if os.path.exists(nuclei) and os.path.getsize(nuclei) > 0:
         with open(nuclei, 'r') as f:
             for line in f:
-                if not line.strip(): continue
+                if not line.strip(): 
+                    continue
                 try:
                     data = json.loads(line)
                     nu_count += 1
                     info = data.get('info', {})
                     sev = info.get('severity', 'info').lower()
+                    
+                    # Ensure all parameters and parentheses close properly here
                     ow_lbl, cat_key = map_to_owasp(info.get('tags', []), info.get('name', ''), info.get('description', ''))
                     owasp_counts[cat_key] += 1
                     rem = info.get('remediation') or FALLBACK_REMEDIATIONS[cat_key]
@@ -153,11 +156,12 @@ def generate_report(target, nmap, whatweb, sslscan, gobuster, nikto, nuclei, out
                     <div class="vuln-card severity-{sev}">
                         <strong>{info.get('name', 'Unknown Vulnerability')}</strong> <span class="badge badge-{sev}">{sev.upper()}</span>
                         <p><strong>Matched Endpoint:</strong> {data.get('matched-at', 'N/A')}</p>
-Vulnerability Summary: {info.get('description', 'N/A')}
-Remediation Framework: {rem}
-"""
-except:
-continue
+                        <p><strong>Vulnerability Summary:</strong> {info.get('description', 'N/A')}</p>
+                        <div class="remediation-block"><strong>Remediation Framework:</strong> {rem}</div>
+                    </div>"""
+                except:
+                    continue
+
 if not nuclei_html:
 nuclei_html = "✔ No application layer vulnerabilities detected by Nuclei."
 # 7. Generate Dynamic OWASP Framework Compliance Rows
