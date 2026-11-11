@@ -24,6 +24,15 @@ pip install requests
 export VT_API_KEY="your_virustotal_api_key"
 export HA_API_KEY="your_hybrid_analysis_api_key"
 
+Or hardcode into the script.
+# Change this:
+VT_API_KEY = os.getenv("VT_API_KEY", "YOUR_VIRUSTOTAL_API_KEY")
+HA_API_KEY = os.getenv("HA_API_KEY", "YOUR_HYBRID_ANALYSIS_API_KEY")
+
+# To this:
+VT_API_KEY = os.getenv("VT_API_KEY", "x1y2z3...your_real_vt_key...")
+HA_API_KEY = os.getenv("HA_API_KEY", "a1b2c3...your_real_ha_key...")
+
 python lite_munin_throttled.py -f iocs.txt
 ```
 
