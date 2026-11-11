@@ -33,7 +33,7 @@ HA_API_KEY = os.getenv("HA_API_KEY", "YOUR_HYBRID_ANALYSIS_API_KEY")
 VT_API_KEY = os.getenv("VT_API_KEY", "x1y2z3...your_real_vt_key...")
 HA_API_KEY = os.getenv("HA_API_KEY", "a1b2c3...your_real_ha_key...")
 
-python lite_munin_throttled.py -f iocs.txt
+python lite_munin_throttled.py -f <iocs filename>.txt
 ```
 
 ### 2. File Format (`iocs.txt`)
