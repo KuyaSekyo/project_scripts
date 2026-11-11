@@ -2,6 +2,8 @@
 
 A lightweight, non-destructive Python tool inspired by Munin to validate MD5, SHA1, and SHA256 hashes against **VirusTotal (v3 API)** and **Hybrid Analysis (v2 API)**. It outputs directly to an Excel-friendly CSV file and features an intelligent throttling engine to automatically handle free/public API tier rate limits without crashing.
 
+### Special thanks to Florian Roth for his Munin Project: https://github.com/neo23x0/munin, took it as an inspiration for coming up with this project
+
 ## Features
 * **No `venv` Required**: Designed to run natively using standard libraries and a single global dependency.
 * **Smart Throttling**: Monitors API pacing in real time; dynamically pauses only when approaching the 4 requests/minute limit for free keys.
