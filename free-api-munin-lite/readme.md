@@ -2,7 +2,7 @@
 
 A 100% API-key-free Python utility to validate **File Hashes (MD5, SHA1, SHA256)**, **IPv4 Addresses**, and **Domains/FQDNs** without creating accounts or managing API tokens. It queries open threat intelligence feeds and exports the findings directly into an Excel-friendly CSV file.
 
-#### Special thanks to Florian Roth for his original Munin project (https://github.com), which inspired this lightweight workflow.
+#### Special thanks to Florian Roth for his original Munin project (https://github.com/neo23x0/munin), which inspired this lightweight workflow.
 
 ## Data Sources (No API Keys Required)
 * **CIRCL Hashlookup:** Verifies file hashes against known legitimate software and NSRL databases to filter out benign system files.
